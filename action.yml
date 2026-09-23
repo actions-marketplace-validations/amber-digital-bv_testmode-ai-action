@@ -1,0 +1,68 @@
+name: Testmode run
+description: Run your Testmode browser tests from a workflow and fail the job when one fails.
+author: Testmode
+branding:
+  icon: check-circle
+  color: purple
+
+inputs:
+  api-key:
+    description: A Testmode project API key (Project settings > API & CI). Pass it from a secret.
+    required: true
+  environment:
+    description: Environment id or name. Default, the project's default environment.
+    required: false
+  test-plan:
+    description: Test plan id or name. Give exactly one of test-plan, test-case-ids or tags.
+    required: false
+  test-case-ids:
+    description: Test case ids, separated by commas or spaces.
+    required: false
+  tags:
+    description: Run every enabled test case carrying any of these tags, separated by commas or spaces.
+    required: false
+  name:
+    description: Run name shown in Testmode. Default, "<workflow> #<run> · <branch> · <sha>".
+    required: false
+  wait:
+    description: Wait for the run to finish and fail the job unless it passed. "false" returns once it is queued.
+    required: false
+    default: "true"
+  timeout-minutes:
+    description: Stop waiting after this many minutes (the run itself goes on).
+    required: false
+    default: "30"
+  api-url:
+    description: The Testmode API. Only for another deployment (staging is https://api.testmode.dev).
+    required: false
+    default: https://api.testmode.ai
+
+outputs:
+  run-id:
+    description: The run's id.
+    value: ${{ steps.run.outputs.run-id }}
+  run-url:
+    description: The run in Testmode.
+    value: ${{ steps.run.outputs.run-url }}
+  status:
+    description: PASSED, FAILED, CANCELED or SKIPPED; QUEUED when not waiting.
+    value: ${{ steps.run.outputs.status }}
+
+runs:
+  using: composite
+  steps:
+    - id: run
+      shell: bash
+      # Inputs travel as environment variables, never spliced into the
+      # script, so no input can inject shell.
+      run: '"$GITHUB_ACTION_PATH/run.sh"'
+      env:
+        TESTMODE_API_KEY: ${{ inputs.api-key }}
+        TESTMODE_API_URL: ${{ inputs.api-url }}
+        TESTMODE_ENVIRONMENT: ${{ inputs.environment }}
+        TESTMODE_TEST_PLAN: ${{ inputs.test-plan }}
+        TESTMODE_TEST_CASE_IDS: ${{ inputs.test-case-ids }}
+        TESTMODE_TAGS: ${{ inputs.tags }}
+        TESTMODE_RUN_NAME: ${{ inputs.name }}
+        TESTMODE_WAIT: ${{ inputs.wait }}
+        TESTMODE_TIMEOUT_MINUTES: ${{ inputs.timeout-minutes }}
