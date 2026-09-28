@@ -1,4 +1,9 @@
-# Testmode GitHub Action
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/amber-digital-bv/testmode-ai-action/main/.github/logo-white.png">
+  <img src="https://raw.githubusercontent.com/amber-digital-bv/testmode-ai-action/main/.github/logo-black.png" alt="Testmode" height="48">
+</picture>
+
+# Testmode AI
 
 Run your [Testmode](https://testmode.ai) browser tests from a workflow. The job
 waits for the run and fails when a test fails.

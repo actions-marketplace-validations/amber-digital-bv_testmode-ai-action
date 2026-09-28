@@ -2,8 +2,8 @@ name: Testmode AI
 description: Run your Testmode browser tests from a workflow and fail the job when one fails.
 author: Testmode
 branding:
-  icon: check-circle
-  color: purple
+  icon: chevrons-right
+  color: black
 
 inputs:
   api-key:
